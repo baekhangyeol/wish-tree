@@ -5,6 +5,7 @@ import com.techeer.wishtree.domain.wish.domain.Wish;
 import com.techeer.wishtree.domain.wish.dto.request.CreateWishRequest;
 import com.techeer.wishtree.domain.wish.dto.request.UpdateWishRequest;
 import com.techeer.wishtree.domain.wish.dto.response.CreateWishResponse;
+import com.techeer.wishtree.domain.wish.dto.response.GetWishResponse;
 import com.techeer.wishtree.domain.wish.dto.response.UpdateWishResponse;
 import com.techeer.wishtree.domain.wish.repository.WishRepository;
 import lombok.AccessLevel;
@@ -52,5 +53,16 @@ public class WishService {
         wish.update(request);
 
         return UpdateWishResponse.of(wish.getIsConfirm());
+    }
+
+    public GetWishResponse getWish(Long id) {
+        Wish wish = wishRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 소원이 없습니다."));
+
+        if (wish.isDeleted()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제된 소원입니다.");
+        }
+
+        return GetWishResponse.of(wish.getId(), wish.getTitle(), wish.getContent(), wish.getCategory());
     }
 }

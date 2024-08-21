@@ -3,6 +3,7 @@ package com.techeer.wishtree.domain.wish.controller;
 import com.techeer.wishtree.domain.wish.dto.request.CreateWishRequest;
 import com.techeer.wishtree.domain.wish.dto.request.UpdateWishRequest;
 import com.techeer.wishtree.domain.wish.dto.response.CreateWishResponse;
+import com.techeer.wishtree.domain.wish.dto.response.GetWishResponse;
 import com.techeer.wishtree.domain.wish.dto.response.UpdateWishResponse;
 import com.techeer.wishtree.domain.wish.service.WishService;
 import com.techeer.wishtree.global.result.ResultCode;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wish")
+@RequestMapping("/wishes")
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class WishController {
     private final WishService wishService;
@@ -45,5 +47,12 @@ public class WishController {
         UpdateWishResponse response = wishService.updateWish(id, request);
         return ResponseEntity.status(HttpStatus.OK)
             .body(ResultResponse.of(ResultCode.WISH_UPDATE_SUCCESS, response));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResultResponse> getWish(@PathVariable Long id) {
+        GetWishResponse response = wishService.getWish(id);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResultResponse.of(ResultCode.WISH_GET_SUCCESS, response));
     }
 }
