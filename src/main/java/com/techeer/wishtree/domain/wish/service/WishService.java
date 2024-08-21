@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -23,5 +24,17 @@ public class WishService {
         Wish wish = wishRepository.save(entity);
 
         return CreateWishResponse.of(wish.getId());
+    }
+
+    @Transactional
+    public void deleteWish(Long id) {
+        Wish wish = wishRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 소원이 없습니다."));
+
+        if (wish.isDeleted()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제된 소원입니다.");
+        }
+
+        wish.delete();
     }
 }
