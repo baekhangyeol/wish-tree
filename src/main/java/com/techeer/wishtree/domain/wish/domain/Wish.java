@@ -34,7 +34,7 @@ public class Wish extends BaseEntity {
     private String content;
 
     @Column(nullable = false)
-    private String category;
+    private CategoryEnum category;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
