@@ -1,5 +1,7 @@
 package com.techeer.wishtree.domain.wish.controller;
 
+import com.techeer.wishtree.domain.wish.domain.ConfirmEnum;
+import com.techeer.wishtree.domain.wish.domain.Wish;
 import com.techeer.wishtree.domain.wish.dto.request.CreateWishRequest;
 import com.techeer.wishtree.domain.wish.dto.request.UpdateWishRequest;
 import com.techeer.wishtree.domain.wish.dto.response.CreateWishResponse;
@@ -10,6 +12,8 @@ import com.techeer.wishtree.global.result.ResultCode;
 import com.techeer.wishtree.global.result.ResultResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,6 +57,15 @@ public class WishController {
     @GetMapping("/{id}")
     public ResponseEntity<ResultResponse> getWish(@PathVariable Long id) {
         GetWishResponse response = wishService.getWish(id);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResultResponse.of(ResultCode.WISH_GET_SUCCESS, response));
+    }
+
+    @GetMapping
+    public ResponseEntity<ResultResponse> getWishes(
+        @RequestParam(value = "confirm", defaultValue = "UNCONFIRMED") ConfirmEnum isConfirm,
+        Pageable pageable) {
+        Page<GetWishResponse> response = wishService.getWishes(isConfirm, pageable);
         return ResponseEntity.status(HttpStatus.OK)
             .body(ResultResponse.of(ResultCode.WISH_GET_SUCCESS, response));
     }

@@ -10,6 +10,9 @@ import com.techeer.wishtree.domain.wish.dto.response.UpdateWishResponse;
 import com.techeer.wishtree.domain.wish.repository.WishRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class WishService {
     private final WishRepository wishRepository;
+    private final ModelMapper modelMapper;
 
     public CreateWishResponse createWish(CreateWishRequest request) {
         Wish entity = request.toEntity();
@@ -63,6 +67,11 @@ public class WishService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제된 소원입니다.");
         }
 
-        return GetWishResponse.of(wish.getId(), wish.getTitle(), wish.getContent(), wish.getCategory());
+        return GetWishResponse.of(wish.getId(), wish.getTitle(), wish.getContent(), wish.getCategory(), wish.getCreatedAt());
+    }
+
+    public Page<GetWishResponse> getWishes(ConfirmEnum isConfirm, Pageable pageable) {
+        Page<Wish> wishes = wishRepository.findAllByIsDeletedFalseAndIsConfirm(isConfirm, pageable);
+        return wishes.map(wish -> modelMapper.map(wish, GetWishResponse.class));
     }
 }
