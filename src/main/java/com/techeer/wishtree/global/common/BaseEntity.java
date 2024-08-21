@@ -1,5 +1,6 @@
 package com.techeer.wishtree.global.common;
 
+import com.techeer.wishtree.domain.wish.domain.ConfirmEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -31,5 +32,9 @@ public abstract class BaseEntity {
 
     public void delete() {
         this.isDeleted = true;
+    }
+
+    public void update(ConfirmEnum isConfirmed) {
+        this.updatedAt = LocalDateTime.now();
     }
 }

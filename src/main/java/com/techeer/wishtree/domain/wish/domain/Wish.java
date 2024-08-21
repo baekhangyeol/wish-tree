@@ -1,6 +1,7 @@
 package com.techeer.wishtree.domain.wish.domain;
 
 import com.techeer.wishtree.domain.comment.domain.Comment;
+import com.techeer.wishtree.domain.wish.dto.request.UpdateWishRequest;
 import com.techeer.wishtree.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,4 +45,8 @@ public class Wish extends BaseEntity {
 
     @OneToMany(mappedBy = "wish", cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    public void update(UpdateWishRequest request) {
+        this.isConfirm = request.getIsConfirm();
+    }
 }

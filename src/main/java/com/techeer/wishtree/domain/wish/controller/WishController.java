@@ -1,7 +1,9 @@
 package com.techeer.wishtree.domain.wish.controller;
 
 import com.techeer.wishtree.domain.wish.dto.request.CreateWishRequest;
+import com.techeer.wishtree.domain.wish.dto.request.UpdateWishRequest;
 import com.techeer.wishtree.domain.wish.dto.response.CreateWishResponse;
+import com.techeer.wishtree.domain.wish.dto.response.UpdateWishResponse;
 import com.techeer.wishtree.domain.wish.service.WishService;
 import com.techeer.wishtree.global.result.ResultCode;
 import com.techeer.wishtree.global.result.ResultResponse;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,5 +38,12 @@ public class WishController {
         wishService.deleteWish(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
             .body(ResultResponse.of(ResultCode.WISH_DELETE_SUCCESS));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResultResponse> updateWish(@PathVariable Long id, @RequestBody UpdateWishRequest request) {
+        UpdateWishResponse response = wishService.updateWish(id, request);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResultResponse.of(ResultCode.WISH_UPDATE_SUCCESS, response));
     }
 }

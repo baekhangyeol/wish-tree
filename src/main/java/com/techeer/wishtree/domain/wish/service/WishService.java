@@ -1,8 +1,11 @@
 package com.techeer.wishtree.domain.wish.service;
 
+import com.techeer.wishtree.domain.wish.domain.ConfirmEnum;
 import com.techeer.wishtree.domain.wish.domain.Wish;
 import com.techeer.wishtree.domain.wish.dto.request.CreateWishRequest;
+import com.techeer.wishtree.domain.wish.dto.request.UpdateWishRequest;
 import com.techeer.wishtree.domain.wish.dto.response.CreateWishResponse;
+import com.techeer.wishtree.domain.wish.dto.response.UpdateWishResponse;
 import com.techeer.wishtree.domain.wish.repository.WishRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +39,18 @@ public class WishService {
         }
 
         wish.delete();
+    }
+
+    @Transactional
+    public UpdateWishResponse updateWish(Long id, UpdateWishRequest request) {
+        Wish wish = wishRepository.findByIdAndIsConfirm(id, ConfirmEnum.UNCONFIRMED)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 소원이 없거나 이미 승인 혹은 거절된 소원입니다.."));
+
+        if (wish.isDeleted()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제된 소원입니다.");
+        }
+        wish.update(request);
+
+        return UpdateWishResponse.of(wish.getIsConfirm());
     }
 }
