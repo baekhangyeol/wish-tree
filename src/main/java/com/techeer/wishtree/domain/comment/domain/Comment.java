@@ -31,4 +31,9 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wish_id")
     private Wish wish;
+
+    public Comment(String content, Wish wish) {
+        this.content = content;
+        this.wish = wish;
+    }
 }
