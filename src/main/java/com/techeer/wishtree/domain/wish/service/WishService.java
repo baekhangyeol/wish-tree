@@ -49,7 +49,7 @@ public class WishService {
 
     @Transactional
     public UpdateWishResponse updateWish(Long id, UpdateWishRequest request) {
-        Wish wish = wishRepository.findByIdAndIsConfirm(id, ConfirmEnum.UNCONFIRMED)
+        Wish wish = wishRepository.findByIdAndIsConfirm(id, ConfirmEnum.PENDING)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 소원이 없거나 이미 승인 혹은 거절된 소원입니다.."));
 
         if (wish.getDeletedAt() != null) {

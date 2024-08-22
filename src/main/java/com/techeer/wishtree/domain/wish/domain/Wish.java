@@ -41,7 +41,7 @@ public class Wish extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private ConfirmEnum isConfirm = ConfirmEnum.UNCONFIRMED;
+    private ConfirmEnum isConfirm = ConfirmEnum.PENDING;
 
     @OneToMany(mappedBy = "wish", cascade = CascadeType.ALL)
     private List<Comment> comments;
