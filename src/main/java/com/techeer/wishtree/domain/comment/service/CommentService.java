@@ -39,4 +39,16 @@ public class CommentService {
         Page<Comment> comments = commentRepository.findByWishIdAndDeletedAtIsNull(wish.getId(), pageable);
         return comments.map(GetCommentResponse::from);
     }
+
+    @Transactional
+    public void deleteComment(Long id) {
+        Comment comment = commentRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 댓글이 없습니다."));
+
+        if (comment.getDeletedAt() != null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제된 댓글입니다.");
+        }
+
+        comment.delete();
+    }
 }

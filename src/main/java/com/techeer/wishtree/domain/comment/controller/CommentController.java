@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,4 +44,12 @@ public class CommentController {
             .body(ResultResponse.of(ResultCode.COMMENT_GET_SUCCESS, response));
     }
 
+
+    @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResultResponse> deleteComment(@PathVariable Long id) {
+        commentService.deleteComment(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+            .body(ResultResponse.of(ResultCode.COMMENT_DELETE_SUCCESS));
+    }
 }
