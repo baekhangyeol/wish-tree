@@ -11,6 +11,7 @@ import com.techeer.wishtree.domain.wish.dto.response.UpdateWishResponse;
 import com.techeer.wishtree.domain.wish.service.WishService;
 import com.techeer.wishtree.global.result.ResultCode;
 import com.techeer.wishtree.global.result.ResultResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WishController {
     private final WishService wishService;
 
+    @Operation(summary = "소원 생성", description = "소원을 생성합니다.")
     @PostMapping
     public ResponseEntity<ResultResponse> createWish(@Validated @RequestBody CreateWishRequest request) {
         CreateWishResponse response = wishService.createWish(request);
@@ -41,6 +43,7 @@ public class WishController {
             .body(ResultResponse.of(ResultCode.WISH_CREATE_SUCCESS, response));
     }
 
+    @Operation(summary = "소원 삭제", description = "소원을 삭제합니다.")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResultResponse> deleteWish(@PathVariable Long id) {
         wishService.deleteWish(id);
@@ -48,6 +51,7 @@ public class WishController {
             .body(ResultResponse.of(ResultCode.WISH_DELETE_SUCCESS));
     }
 
+    @Operation(summary = "소원 승인/거절", description = "소원을 승인 및 거절합니다.")
     @PatchMapping("/{id}")
     public ResponseEntity<ResultResponse> updateWish(@PathVariable Long id, @RequestBody UpdateWishRequest request) {
         UpdateWishResponse response = wishService.updateWish(id, request);
@@ -55,6 +59,7 @@ public class WishController {
             .body(ResultResponse.of(ResultCode.WISH_UPDATE_SUCCESS, response));
     }
 
+    @Operation(summary = "소원 단일 조회", description = "하나의 소원을 조회합니다.")
     @GetMapping("/{id}")
     public ResponseEntity<ResultResponse> getWish(@PathVariable Long id) {
         GetWishResponse response = wishService.getWish(id);
@@ -62,6 +67,7 @@ public class WishController {
             .body(ResultResponse.of(ResultCode.WISH_GET_SUCCESS, response));
     }
 
+    @Operation(summary = "소원 목록 조회", description = "여러 소원을 조회합니다.")
     @GetMapping
     public ResponseEntity<ResultResponse> getWishes(
         @RequestParam(value = "confirm", defaultValue = "UNCONFIRMED") ConfirmEnum isConfirm,
@@ -71,6 +77,7 @@ public class WishController {
             .body(ResultResponse.of(ResultCode.WISH_GET_SUCCESS, response));
     }
 
+    @Operation(summary = "소원 검색", description = "소원을 검색합니다.")
     @GetMapping("/search")
     public ResponseEntity<ResultResponse> searchWishes(
         @RequestParam(value = "keyword") String keyword,
