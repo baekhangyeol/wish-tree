@@ -1,5 +1,6 @@
 package com.techeer.wishtree.domain.wish.service;
 
+import com.techeer.wishtree.domain.wish.domain.CategoryEnum;
 import com.techeer.wishtree.domain.wish.domain.ConfirmEnum;
 import com.techeer.wishtree.domain.wish.domain.Wish;
 import com.techeer.wishtree.domain.wish.dto.request.CreateWishRequest;
@@ -72,6 +73,11 @@ public class WishService {
 
     public Page<GetWishResponse> getWishes(ConfirmEnum isConfirm, Pageable pageable) {
         Page<Wish> wishes = wishRepository.findAllByIsDeletedFalseAndIsConfirm(isConfirm, pageable);
+        return wishes.map(wish -> modelMapper.map(wish, GetWishResponse.class));
+    }
+
+    public Page<GetWishResponse> searchWishes(String keyword, CategoryEnum category, Pageable pageable) {
+        Page<Wish> wishes = wishRepository.findByKeywordContainingAndIsDeletedFalse(keyword, category, pageable);
         return wishes.map(wish -> modelMapper.map(wish, GetWishResponse.class));
     }
 }

@@ -1,5 +1,6 @@
 package com.techeer.wishtree.domain.wish.controller;
 
+import com.techeer.wishtree.domain.wish.domain.CategoryEnum;
 import com.techeer.wishtree.domain.wish.domain.ConfirmEnum;
 import com.techeer.wishtree.domain.wish.domain.Wish;
 import com.techeer.wishtree.domain.wish.dto.request.CreateWishRequest;
@@ -66,6 +67,16 @@ public class WishController {
         @RequestParam(value = "confirm", defaultValue = "UNCONFIRMED") ConfirmEnum isConfirm,
         Pageable pageable) {
         Page<GetWishResponse> response = wishService.getWishes(isConfirm, pageable);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResultResponse.of(ResultCode.WISH_GET_SUCCESS, response));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ResultResponse> searchWishes(
+        @RequestParam(value = "keyword") String keyword,
+        @RequestParam(value = "category") CategoryEnum category,
+        Pageable pageable) {
+        Page<GetWishResponse> response = wishService.searchWishes(keyword, category, pageable);
         return ResponseEntity.status(HttpStatus.OK)
             .body(ResultResponse.of(ResultCode.WISH_GET_SUCCESS, response));
     }

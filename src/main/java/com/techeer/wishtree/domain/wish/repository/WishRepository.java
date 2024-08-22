@@ -1,5 +1,6 @@
 package com.techeer.wishtree.domain.wish.repository;
 
+import com.techeer.wishtree.domain.wish.domain.CategoryEnum;
 import com.techeer.wishtree.domain.wish.domain.ConfirmEnum;
 import com.techeer.wishtree.domain.wish.domain.Wish;
 import java.util.Optional;
@@ -16,4 +17,7 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
 
     @Query("SELECT w FROM Wish w WHERE w.isDeleted = false AND w.isConfirm = :isConfirm ORDER BY w.createdAt DESC")
     Page<Wish> findAllByIsDeletedFalseAndIsConfirm(ConfirmEnum isConfirm, Pageable pageable);
+
+    @Query("SELECT w FROM Wish w WHERE (w.title LIKE %:keyword% OR w.content LIKE %:keyword%) AND w.category = :category AND w.isDeleted = false ORDER BY w.createdAt DESC")
+    Page<Wish> findByKeywordContainingAndIsDeletedFalse(String keyword, CategoryEnum category, Pageable pageable);
 }
