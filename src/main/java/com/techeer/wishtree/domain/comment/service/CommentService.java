@@ -34,7 +34,9 @@ public class CommentService {
     }
 
     public Page<GetCommentResponse> getComments(Long wishId, Pageable pageable) {
-        Page<Comment> comments = commentRepository.findByWishIdAndDeletedAtIsNull(wishId, pageable);
+        Wish wish = wishRepository.findByIdAndDeletedAtIsNull(wishId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 소원이 없습니다."));
+        Page<Comment> comments = commentRepository.findByWishIdAndDeletedAtIsNull(wish.getId(), pageable);
         return comments.map(GetCommentResponse::from);
     }
 }

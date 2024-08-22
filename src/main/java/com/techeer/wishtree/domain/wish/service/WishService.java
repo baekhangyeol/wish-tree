@@ -72,12 +72,12 @@ public class WishService {
     }
 
     public Page<GetWishResponse> getWishes(ConfirmEnum isConfirm, Pageable pageable) {
-        Page<Wish> wishes = wishRepository.findAllByDeletedAtFalseAndIsConfirm(isConfirm, pageable);
+        Page<Wish> wishes = wishRepository.findAllByIsConfirm(isConfirm, pageable);
         return wishes.map(wish -> modelMapper.map(wish, GetWishResponse.class));
     }
 
     public Page<GetWishResponse> searchWishes(String keyword, CategoryEnum category, Pageable pageable) {
-        Page<Wish> wishes = wishRepository.findByKeywordContainingAndDeletedAt(keyword, category, pageable);
+        Page<Wish> wishes = wishRepository.findByKeywordAndCategory(keyword, category, pageable);
         return wishes.map(wish -> modelMapper.map(wish, GetWishResponse.class));
     }
 }
