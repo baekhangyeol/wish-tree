@@ -27,11 +27,11 @@ public abstract class BaseEntity {
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
 
-    @Column(nullable = true)
-    private boolean isDeleted;
+    @Column(nullable = false)
+    private LocalDateTime deletedAt;
 
     public void delete() {
-        this.isDeleted = true;
+        this.deletedAt = LocalDateTime.now();
     }
 
     public void update(ConfirmEnum isConfirmed) {

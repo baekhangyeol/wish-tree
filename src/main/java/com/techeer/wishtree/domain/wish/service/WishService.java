@@ -40,7 +40,7 @@ public class WishService {
         Wish wish = wishRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 소원이 없습니다."));
 
-        if (wish.isDeleted()) {
+        if (wish.getDeletedAt() != null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제된 소원입니다.");
         }
 
@@ -52,7 +52,7 @@ public class WishService {
         Wish wish = wishRepository.findByIdAndIsConfirm(id, ConfirmEnum.UNCONFIRMED)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 소원이 없거나 이미 승인 혹은 거절된 소원입니다.."));
 
-        if (wish.isDeleted()) {
+        if (wish.getDeletedAt() != null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제된 소원입니다.");
         }
         wish.update(request);
@@ -64,7 +64,7 @@ public class WishService {
         Wish wish = wishRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 소원이 없습니다."));
 
-        if (wish.isDeleted()) {
+        if (wish.getDeletedAt() != null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이미 삭제된 소원입니다.");
         }
 
