@@ -1,6 +1,7 @@
 FROM bellsoft/liberica-openjre-debian:17-cds AS builder
 WORKDIR /builder
 
+RUN ./gradlew clean build
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
