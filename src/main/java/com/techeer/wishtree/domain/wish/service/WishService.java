@@ -74,9 +74,9 @@ public class WishService {
     public Page<GetWishResponse> getWishes(ConfirmEnum isConfirm, Pageable pageable) {
         Page<Wish> wishes;
         if (isConfirm == null) {
-            wishes = wishRepository.findAll(pageable);
+            wishes = wishRepository.findAllAndDeletedAtIsNull(pageable);
         } else {
-            wishes = wishRepository.findAllByIsConfirm(isConfirm, pageable);
+            wishes = wishRepository.findAllByDeletedAtIsNullAndIsConfirm(isConfirm, pageable);
         }
         return wishes.map(wish -> modelMapper.map(wish, GetWishResponse.class));
     }

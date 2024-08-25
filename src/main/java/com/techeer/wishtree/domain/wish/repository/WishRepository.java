@@ -23,4 +23,10 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
 
     @Query("SELECT w FROM Wish w WHERE w.id = :id AND w.deletedAt IS NULL")
     Optional<Wish> findByIdAndDeletedAtIsNull(Long id);
+
+    @Query("SELECT w FROM Wish w WHERE w.deletedAt IS NULL")
+    Page<Wish> findAllAndDeletedAtIsNull(Pageable pageable);
+
+    @Query("SELECT w FROM Wish w WHERE w.deletedAt IS NULL AND w.isConfirm = :isConfirm")
+    Page<Wish> findAllByDeletedAtIsNullAndIsConfirm(ConfirmEnum isConfirm, Pageable pageable);
 }
