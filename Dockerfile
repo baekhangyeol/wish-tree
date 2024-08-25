@@ -1,20 +1,18 @@
-FROM bellsoft/liberica-openjre-debian:17-cds AS builder
+FROM bellsoft/liberica-openjdk-debian:17 AS builder
 WORKDIR /builder
 
-COPY . .
+COPY ./gradlew /builder/gradlew
+COPY ./gradle /builder/gradle
 RUN chmod +x ./gradlew
 
-RUN ./gradlew clean build
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} application.jar
-RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
+COPY ./ /builder/
+
+RUN ./gradlew clean build -x test
 
 FROM bellsoft/liberica-openjre-debian:17-cds
 WORKDIR /application
 
-COPY --from=builder /builder/extracted/dependencies/ ./
-COPY --from=builder /builder/extracted/spring-boot-loader/ ./
-COPY --from=builder /builder/extracted/snapshot-dependencies/ ./
-COPY --from=builder /builder/extracted/application/ ./
+ARG JAR_FILE=build/libs/*.jar
+COPY --from=builder /builder/${JAR_FILE} application.jar
 
 ENTRYPOINT ["java", "-jar", "application.jar"]
