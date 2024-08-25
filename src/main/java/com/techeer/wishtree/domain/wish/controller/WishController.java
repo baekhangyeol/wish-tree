@@ -70,7 +70,7 @@ public class WishController {
     @Operation(summary = "소원 목록 조회", description = "여러 소원을 조회합니다.")
     @GetMapping
     public ResponseEntity<ResultResponse> getWishes(
-        @RequestParam(value = "confirm", defaultValue = "UNCONFIRMED") ConfirmEnum isConfirm,
+        @RequestParam(value = "confirm", required = false) ConfirmEnum isConfirm,
         Pageable pageable) {
         Page<GetWishResponse> response = wishService.getWishes(isConfirm, pageable);
         return ResponseEntity.status(HttpStatus.OK)
