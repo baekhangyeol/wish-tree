@@ -1,6 +1,9 @@
 FROM bellsoft/liberica-openjre-debian:17-cds AS builder
 WORKDIR /builder
 
+COPY . .
+RUN chmod +x ./gradlew
+
 RUN ./gradlew clean build
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} application.jar
